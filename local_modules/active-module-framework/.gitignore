@@ -1,0 +1,7 @@
+package-lock.json
+*.tsbuildinfo
+*.d.ts
+*.js
+*.map
+!ecosystem.config.js
+!resource/**/*
