@@ -1,0 +1,18 @@
+{
+  "name": "amf-sample01",
+  "version": "1.0.0",
+  "description": "ActiveModuleFramework Sample01 掲示板",
+  "main": "dist/app/index.js",
+  "scripts": {
+    "start": "node --no-warnings dist/app/index.js",
+    "watch": "tsc -b -w",
+    "build": "tsc -b",
+    "pm2_start": "pm2 start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "active-module-framework": "file:local_modules/active-module-framework"
+  }
+}
