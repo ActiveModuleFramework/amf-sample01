@@ -3,10 +3,10 @@
     	"target": "es2017",
     	"module": "commonjs",
 		"rootDir": "./src/",
-		"outDir":"./",
+		"outDir":"./dist/",
 		"declaration": true,
     	"sourceMap": true,
 		"composite": true
     },
-	"exclude": ["*.d.ts","lib/*.d.ts"]
+	"exclude": ["node_modules","resource","dist"]
 }

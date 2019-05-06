@@ -6,8 +6,8 @@
 	"private": false,
 	"author": "SoraKumo",
 	"license": "MIT",
-	"main": "index.js",
-	"types": "index.d.ts",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"bin": {
 		"amf-init": "bin/amf-init"
 	},

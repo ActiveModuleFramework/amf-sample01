@@ -38,6 +38,7 @@ export interface ManagerParams {
 	debug: boolean
 	listen: number | string
 }
+
 /**
  *フレームワーク総合管理用クラス
  *
