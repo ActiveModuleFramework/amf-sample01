@@ -12,4 +12,8 @@
 			"dom"
 		]
 	},
+	"references": [{
+			"path": "../jsw"
+		}
+	]
 }

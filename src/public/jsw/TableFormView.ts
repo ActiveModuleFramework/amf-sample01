@@ -1,7 +1,7 @@
 namespace JSW {
 export interface ITEM_OPTION{
 	label?: string,
-	type?: 'textbox'|'checkbox'|'select'|'submit',
+	type?: string,
 	name?: string,
 	value?: string | number | boolean
 	link?:string
@@ -36,7 +36,6 @@ export class TableFormView extends Window{
 		if(params.type === 'submit'){
 			const button = document.createElement('button')
 			button.textContent = params.label
-			button.name = params.name
 			this.footer.appendChild(button)
 			if(params.events){
 				const events = params.events
@@ -55,13 +54,6 @@ export class TableFormView extends Window{
 			row.appendChild(data)
 
 			switch (params.type) {
-				case 'textbox':
-					const textbox = document.createElement('input')
-					textbox.type = 'text'
-					textbox.name = params.name || ''
-					textbox.value = (params.value as string) || ''
-					data.appendChild(textbox)
-					break
 				case 'checkbox':
 					const checkbox = document.createElement('input')
 					checkbox.type = 'checkbox'
@@ -106,10 +98,6 @@ export class TableFormView extends Window{
 			this.items.appendChild(row)
 			return row
 		}
-	}
-	getItem(name:string){
-		const node = this.getClient().querySelector(`[name="${name}"]`)
-		return node
 	}
 	getParams(){
 		const values : {[key:string]:string|number|boolean} = {}
