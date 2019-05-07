@@ -3089,6 +3089,7 @@ var JWF;
             if (params.type === 'submit') {
                 var button = document.createElement('button');
                 button.textContent = params.label;
+                button.name = params.name;
                 this.footer.appendChild(button);
                 if (params.events) {
                     var events = params.events;
@@ -3106,6 +3107,13 @@ var JWF;
                 var data = document.createElement('div');
                 row.appendChild(data);
                 switch (params.type) {
+                    case 'textbox':
+                        var textbox = document.createElement('input');
+                        textbox.type = 'text';
+                        textbox.name = params.name || '';
+                        textbox.value = params.value || '';
+                        data.appendChild(textbox);
+                        break;
                     case 'checkbox':
                         var checkbox = document.createElement('input');
                         checkbox.type = 'checkbox';
@@ -3120,7 +3128,7 @@ var JWF;
                             var o = _a[_i];
                             var option = document.createElement('option');
                             option.textContent = o.name;
-                            option.value = o.value.toString();
+                            option.value = o.value;
                             select.appendChild(option);
                         }
                         data.appendChild(select);
@@ -3151,6 +3159,10 @@ var JWF;
                 this.items.appendChild(row);
                 return row;
             }
+        };
+        TableFormView.prototype.getItem = function (name) {
+            var node = this.getClient().querySelector("[name=\"" + name + "\"]");
+            return node;
         };
         TableFormView.prototype.getParams = function () {
             var values = {};

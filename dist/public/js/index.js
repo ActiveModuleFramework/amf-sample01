@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-///<reference path="../../../dist/public/js/jsw.d.ts"/>
+///<reference path="../../../dist/public/js/JWF.d.ts"/>
 //ページ読み込み時に実行する処理を設定
 addEventListener("DOMContentLoaded", Main);
 function Main() {
@@ -63,14 +63,14 @@ function Main() {
         });
     }); };
     //通信用アダプターの作成
-    var adapter = new JSW.Adapter();
+    var adapter = new JWF.Adapter();
     //メインウインドウの作成
-    var mainWindow = new JSW.FrameWindow();
+    var mainWindow = new JWF.FrameWindow();
     mainWindow.setTitle('メインウインドウ');
     mainWindow.getClient().style.overflow = 'auto';
     mainWindow.setSize(640, 480);
     //ユーザ入力用フォームの作成
-    var inputWindow = new JSW.TableFormView({ frame: true });
+    var inputWindow = new JWF.TableFormView({ frame: true });
     inputWindow.setOrderTop(true); //ウインドウを常に最上位に
     inputWindow.setTitle('入力ウインドウ');
     inputWindow.setPos();

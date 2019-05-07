@@ -1155,7 +1155,7 @@ declare namespace JWF {
 declare namespace JWF {
     interface ITEM_OPTION {
         label?: string;
-        type?: string;
+        type?: 'textbox' | 'checkbox' | 'select' | 'submit';
         name?: string;
         value?: string | number | boolean;
         link?: string;
@@ -1166,7 +1166,7 @@ declare namespace JWF {
         };
         options?: {
             name: string;
-            value: string | number;
+            value: string;
         }[];
     }
     class TableFormView extends Window {
@@ -1175,6 +1175,7 @@ declare namespace JWF {
         footer: HTMLDivElement;
         constructor(params?: WINDOW_PARAMS);
         addItem(params: ITEM_OPTION): HTMLButtonElement | HTMLDivElement | HTMLLabelElement;
+        getItem(name: string): Element;
         getParams(): {
             [key: string]: string | number | boolean;
         };
