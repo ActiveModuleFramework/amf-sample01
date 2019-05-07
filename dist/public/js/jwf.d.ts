@@ -1,4 +1,4 @@
-declare namespace JSW {
+declare namespace JWF {
     interface FunctionData {
         name: string;
         params: any[];
@@ -33,7 +33,7 @@ declare namespace JSW {
  * JavaScriptWindowフレームワーク用名前空間
  * namespaceの前に「export」を入れると、モジュールとして利用可能
 */
-declare namespace JSW {
+declare namespace JWF {
     function sprintf(format: string, ...args: any[]): string;
     /**
      * 位置設定用
@@ -73,13 +73,13 @@ declare namespace JSW {
     * @extends {HTMLElement}
     */
     interface JNode extends HTMLElement {
-        Jsw: Window;
+        Jwf: Window;
     }
     /**
      * ウインドウ等総合管理クラス
      *
      * @export
-     * @class Jsw
+     * @class Jwf
      */
     class WindowManager {
         static nodeX: number;
@@ -103,7 +103,7 @@ declare namespace JSW {
          *
          * @static
          * @param {HTMLElement} node
-         * @memberof Jsw
+         * @memberof Jwf
          */
         static enableMove(node: HTMLElement): void;
         /**
@@ -113,7 +113,7 @@ declare namespace JSW {
          * @param {HTMLElement} node 対象ノード
          * @param {string} ename イベント名
          * @param {*} [params] イベント発生時にevent.paramsの形で送られる
-         * @memberof Jsw
+         * @memberof Jwf
          */
         static callEvent(node: HTMLElement, ename: string, params?: any): void;
         /**
@@ -123,7 +123,7 @@ declare namespace JSW {
          * @param {string} ename イベント名
          * @param {*} [params] イベント発生時にevent.paramsの形で送られる
          * @returns {Event} 作成したイベント
-         * @memberof Jsw
+         * @memberof Jwf
          */
         static createEvent(ename: string, params?: any): Event;
         /**
@@ -133,7 +133,7 @@ declare namespace JSW {
          * @param {string} tagName タグ名
          * @param {*} [params] タグパラメータ
          * @returns {HTMLElement} 作成したノード
-         * @memberof Jsw
+         * @memberof Jwf
          */
         static createElement(tagName: string, params?: any): HTMLElement;
         /**
@@ -142,12 +142,12 @@ declare namespace JSW {
          *
          * @static
          * @param {boolean} flag	true:全Window強制更新 false:更新の必要があるWindowのみ更新
-         * @memberof Jsw
+         * @memberof Jwf
          */
         static layout(flag: boolean): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     /**
      *ウインドウ管理用基本データ
      *
@@ -228,8 +228,8 @@ declare namespace JSW {
          */
         constructor(params?: WINDOW_PARAMS);
         setOverlap(flag: boolean): void;
-        setJswStyle(style: string): void;
-        getJswStyle(): string;
+        setJwfStyle(style: string): void;
+        getJwfStyle(): string;
         private addFrame;
         private onMouseDown;
         private onMouseMove;
@@ -638,7 +638,7 @@ declare namespace JSW {
         constructor(param?: any);
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     interface BUTTON_EVENT_ITEM_CLICK {
         event: Event;
     }
@@ -724,7 +724,35 @@ declare namespace JSW {
         addEventListener<K extends keyof ButtonEventMap>(type: K, listener: (ev: ButtonEventMap[K]) => any): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
+    interface CALENDARVIEW_EVENT_DATE_CLICK {
+        value: any;
+    }
+    interface CalendarViewEventMap extends WINDOW_EVENT_MAP {
+        "date": CALENDARVIEW_EVENT_DATE_CLICK;
+    }
+    class CalendarView extends Window {
+        titleCell: HTMLTableDataCellElement;
+        dateCells: HTMLTableDataCellElement[];
+        calendarDate: Date;
+        startDate: Date;
+        endDate: Date;
+        holidays: {
+            [keys: string]: string;
+        };
+        selects: {
+            [keys: string]: boolean;
+        };
+        constructor();
+        moveMonth(month: any): void;
+        redraw(): void;
+        setHoliday(date: Date, text: string): void;
+        setSelect(date: Date, value?: boolean): void;
+        private onCellClick;
+        addEventListener<K extends keyof CalendarViewEventMap>(type: K, listener: (ev: CalendarViewEventMap[K]) => any): void;
+    }
+}
+declare namespace JWF {
     class CheckBox extends Window {
         nodeText: HTMLSpanElement;
         nodeCheck: HTMLInputElement;
@@ -739,7 +767,7 @@ declare namespace JSW {
         getTextNode(): HTMLSpanElement;
     }
 }
-declare module JSW {
+declare module JWF {
     interface ListViewEventMap extends WINDOW_EVENT_MAP {
         "selectItem": {
             text: string;
@@ -754,7 +782,7 @@ declare module JSW {
         onLayout(flag: boolean): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     class Label extends Window {
         nodeText: HTMLSpanElement;
         constructor(text?: string);
@@ -765,10 +793,10 @@ declare namespace JSW {
         setAlign(style: string): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     function Sleep(timeout: number): Promise<void>;
 }
-declare namespace JSW {
+declare namespace JWF {
     interface LISTVIEW_EVENT_ITEM_CLICK {
         itemIndex: number;
         subItemIndex: number;
@@ -1004,7 +1032,7 @@ declare namespace JSW {
         addEventListener<K extends keyof ListViewEventMap>(type: K, listener: (ev: ListViewEventMap[K]) => any): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     interface MESSAGEBOX_EVENT_ITEM_CLICK {
         value: any;
     }
@@ -1012,7 +1040,7 @@ declare namespace JSW {
         "buttonClick": MESSAGEBOX_EVENT_ITEM_CLICK;
     }
     class MessageBox extends FrameWindow {
-        label: JSW.Label;
+        label: JWF.Label;
         constructor(title: string, msg: string, buttons?: {
             [key: string]: any;
         });
@@ -1020,7 +1048,7 @@ declare namespace JSW {
         setText(text: string): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     /**
      *パネル用クラス
      *
@@ -1032,8 +1060,8 @@ declare namespace JSW {
         constructor();
     }
 }
-declare namespace JSW {
-    class SelectBox extends JSW.Window {
+declare namespace JWF {
+    class SelectBox extends JWF.Window {
         select: HTMLSelectElement;
         constructor(option: {
             label?: string;
@@ -1044,8 +1072,8 @@ declare namespace JSW {
         });
     }
 }
-declare namespace JSW {
-    interface JSWSPLITDATA {
+declare namespace JWF {
+    interface JWFSPLITDATA {
         splitterThick: number;
         splitterPos: number;
         splitterType: string;
@@ -1067,7 +1095,7 @@ declare namespace JSW {
      * @extends {Window}
      */
     class Splitter extends Window {
-        JDataSplit: JSWSPLITDATA;
+        JDataSplit: JWFSPLITDATA;
         /**
          *Creates an instance of Splitter.
          * @param {number} [splitPos]
@@ -1124,10 +1152,10 @@ declare namespace JSW {
         getChild(index: number): Window;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     interface ITEM_OPTION {
         label?: string;
-        type?: 'textbox' | 'checkbox' | 'select' | 'submit';
+        type?: string;
         name?: string;
         value?: string | number | boolean;
         link?: string;
@@ -1138,7 +1166,7 @@ declare namespace JSW {
         };
         options?: {
             name: string;
-            value: string;
+            value: string | number;
         }[];
     }
     class TableFormView extends Window {
@@ -1147,7 +1175,6 @@ declare namespace JSW {
         footer: HTMLDivElement;
         constructor(params?: WINDOW_PARAMS);
         addItem(params: ITEM_OPTION): HTMLButtonElement | HTMLDivElement | HTMLLabelElement;
-        getItem(name: string): Element;
         getParams(): {
             [key: string]: string | number | boolean;
         };
@@ -1156,7 +1183,7 @@ declare namespace JSW {
         }): void;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     class TextBox extends Window {
         nodeLabel: HTMLElement;
         nodeText: HTMLInputElement;
@@ -1173,7 +1200,7 @@ declare namespace JSW {
         getTextNode(): HTMLInputElement;
     }
 }
-declare namespace JSW {
+declare namespace JWF {
     interface TREEVIEW_EVENT_SELECT {
         item: TreeItem;
     }
@@ -1451,4 +1478,19 @@ declare namespace JSW {
  *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
  * @version   v4.2.6+9869a4bc
  */
+declare interface NodeModule {
+}
+declare interface NodeRequire {
+}
+declare namespace NodeJS {
+    interface Process {
+    }
+    interface Global {
+    }
+}
 declare var define: any;
+declare var exports: any;
+declare var module: NodeModule;
+declare var process: NodeJS.Process;
+declare var require: NodeRequire;
+declare var global: NodeJS.Global;

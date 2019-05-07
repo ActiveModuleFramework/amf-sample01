@@ -10,7 +10,7 @@ new amf.Manager({
     jsPath: ['js'],
     localDBPath: 'dist/db/app.db',
     modulePath: 'dist/app/modules',
-    jsPriority: ['jsw.js'],
+    jsPriority: ['jwf.js'],
     debug: true,
     listen: 8080 //受付ポート/UNIXドメインソケット
     //listen:'dist/sock/app.sock'

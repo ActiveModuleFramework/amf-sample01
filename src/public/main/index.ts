@@ -1,4 +1,4 @@
-///<reference path="../../../dist/public/js/jsw.d.ts"/>
+///<reference path="../../../dist/public/js/JWF.d.ts"/>
 
 //ページ読み込み時に実行する処理を設定
 addEventListener("DOMContentLoaded", Main)
@@ -23,16 +23,16 @@ function Main(){
 	}
 
 	//通信用アダプターの作成
-	const adapter = new JSW.Adapter()
+	const adapter = new JWF.Adapter()
 
 	//メインウインドウの作成
-	const mainWindow = new JSW.FrameWindow()
+	const mainWindow = new JWF.FrameWindow()
 	mainWindow.setTitle('メインウインドウ')
 	mainWindow.getClient().style.overflow = 'auto'
 	mainWindow.setSize(640,480)
 
 	//ユーザ入力用フォームの作成
-	const inputWindow = new JSW.TableFormView({frame:true})
+	const inputWindow = new JWF.TableFormView({frame:true})
 	inputWindow.setOrderTop(true)			//ウインドウを常に最上位に
 	inputWindow.setTitle('入力ウインドウ')
 	inputWindow.setPos()

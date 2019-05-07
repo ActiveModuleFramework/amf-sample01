@@ -13,7 +13,7 @@
 		]
 	},
 	"references": [{
-			"path": "../jsw"
+			"path": "../../lib/jwf.tsconfig.json"
 		}
 	]
 }

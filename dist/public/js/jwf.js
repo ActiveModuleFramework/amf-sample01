@@ -11,13 +11,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     var Adapter = /** @class */ (function () {
         function Adapter(scriptUrl, keyName) {
-            if (scriptUrl === void 0) { scriptUrl = './'; }
             this.functionSet = [];
-            this.scriptUrl = scriptUrl;
+            this.scriptUrl = scriptUrl || './';
             this.keyName = keyName || 'Session';
         }
         Adapter.prototype.exec = function (v1) {
@@ -162,14 +161,14 @@ var JSW;
         };
         return Adapter;
     }());
-    JSW.Adapter = Adapter;
-})(JSW || (JSW = {}));
+    JWF.Adapter = Adapter;
+})(JWF || (JWF = {}));
 /**
  * JavaScriptWindowフレームワーク用名前空間
  * namespaceの前に「export」を入れると、モジュールとして利用可能
 */
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     //---------------------------------------
     //書式付文字列生成
     //	引数	format,・・・
@@ -228,12 +227,12 @@ var JSW;
         }
         return dest;
     }
-    JSW.sprintf = sprintf;
+    JWF.sprintf = sprintf;
     /**
      * ウインドウ等総合管理クラス
      *
      * @export
-     * @class Jsw
+     * @class Jwf
      */
     var WindowManager = /** @class */ (function () {
         function WindowManager() {
@@ -259,7 +258,7 @@ var JSW;
          *
          * @static
          * @param {HTMLElement} node
-         * @memberof Jsw
+         * @memberof Jwf
          */
         WindowManager.enableMove = function (node) {
             function mouseDown(e) {
@@ -286,7 +285,7 @@ var JSW;
          * @param {HTMLElement} node 対象ノード
          * @param {string} ename イベント名
          * @param {*} [params] イベント発生時にevent.paramsの形で送られる
-         * @memberof Jsw
+         * @memberof Jwf
          */
         WindowManager.callEvent = function (node, ename, params) {
             node.dispatchEvent(WindowManager.createEvent(ename, params));
@@ -298,7 +297,7 @@ var JSW;
          * @param {string} ename イベント名
          * @param {*} [params] イベント発生時にevent.paramsの形で送られる
          * @returns {Event} 作成したイベント
-         * @memberof Jsw
+         * @memberof Jwf
          */
         WindowManager.createEvent = function (ename, params) {
             var event;
@@ -319,7 +318,7 @@ var JSW;
          * @param {string} tagName タグ名
          * @param {*} [params] タグパラメータ
          * @returns {HTMLElement} 作成したノード
-         * @memberof Jsw
+         * @memberof Jwf
          */
         WindowManager.createElement = function (tagName, params) {
             var tag = document.createElement(tagName);
@@ -340,7 +339,7 @@ var JSW;
          *
          * @static
          * @param {boolean} flag	true:全Window強制更新 false:更新の必要があるWindowのみ更新
-         * @memberof Jsw
+         * @memberof Jwf
          */
         WindowManager.layout = function (flag) {
             WindowManager.layoutForced = WindowManager.layoutForced || flag;
@@ -348,13 +347,13 @@ var JSW;
                 //タイマーによる遅延実行
                 WindowManager.layoutHandler = setTimeout(function () {
                     WindowManager.layoutHandler = null;
-                    var nodes = document.querySelectorAll("[data-jsw=Window]");
+                    var nodes = document.querySelectorAll("[data-jwf=Window]");
                     var count = nodes.length;
                     for (var i = 0; i < count; i++) {
                         var node = nodes[i];
-                        if (!node.Jsw.getParent())
-                            node.Jsw.onMeasure(WindowManager.layoutForced);
-                        node.Jsw.onLayout(WindowManager.layoutForced);
+                        if (!node.Jwf.getParent())
+                            node.Jwf.onMeasure(WindowManager.layoutForced);
+                        node.Jwf.onLayout(WindowManager.layoutForced);
                     }
                     WindowManager.layoutForced = false;
                 }, 0);
@@ -364,7 +363,7 @@ var JSW;
         WindowManager.frame = null;
         return WindowManager;
     }());
-    JSW.WindowManager = WindowManager;
+    JWF.WindowManager = WindowManager;
     //各イベント設定
     addEventListener("resize", function () { WindowManager.layout(true); });
     addEventListener("mouseup", mouseUp, false);
@@ -376,7 +375,7 @@ var JSW;
     function mouseDown(e) {
         var node = e.target;
         do {
-            if (node.dataset && node.dataset.jsw === "Window") {
+            if (node.dataset && node.dataset.jwf === "Window") {
                 return;
             }
         } while (node = node.parentNode);
@@ -384,11 +383,11 @@ var JSW;
         return false;
     }
     function deactive() {
-        var activeWindows = document.querySelectorAll('[data-jsw="Window"][data-jsw-active="true"]');
+        var activeWindows = document.querySelectorAll('[data-jwf="Window"][data-jwf-active="true"]');
         for (var i = 0, l = activeWindows.length; i < l; i++) {
             var w = activeWindows[i];
-            w.dataset.jswActive = 'false';
-            w.Jsw.callEvent('active', { active: false });
+            w.dataset.jwfActive = 'false';
+            w.Jwf.callEvent('active', { active: false });
         }
     }
     //マウスが離された場合に選択をリセット
@@ -411,10 +410,10 @@ var JSW;
             WindowManager.callEvent(node, 'move', params);
         }
     }
-})(JSW || (JSW = {}));
-/// <reference path="./jsw.ts" />
-var JSW;
-(function (JSW) {
+})(JWF || (JWF = {}));
+/// <reference path="./Jwf.ts" />
+var JWF;
+(function (JWF) {
     //各サイズ
     var FRAME_SIZE = 10; //フレーム枠のサイズ
     var TITLE_SIZE = 24; //タイトルバーのサイズ
@@ -468,16 +467,16 @@ var JSW;
             };
             //ウインドウ用ノードの作成
             var hNode = document.createElement('DIV');
-            hNode.Jsw = this;
+            hNode.Jwf = this;
             this.hNode = hNode;
-            hNode.dataset.jsw = "Window";
+            hNode.dataset.jwf = "Window";
             //位置を絶対位置指定
             hNode.style.position = 'absolute';
             hNode.style.visibility = 'hidden';
             //クライアント領域を作成
             var client = document.createElement('div');
             this.JData.clientArea = client;
-            client.dataset.jswType = 'client';
+            client.dataset.jwfType = 'client';
             hNode.appendChild(client);
             //パラメータに従いウインドウの作成
             if (params) {
@@ -487,12 +486,12 @@ var JSW;
                         this.setOrderLayer(10);
                     if (params.overlap == null)
                         this.setOverlap(true);
-                    this.JData.animation['show'] = 'JSWFrameShow 0.5s ease 0s 1 normal';
-                    this.JData.animation['close'] = 'JSWclose 0.2s ease 0s 1 forwards';
-                    this.JData.animation['maximize'] = 'JSWmaximize 0.2s ease 0s 1 forwards';
-                    this.JData.animation['minimize'] = 'JSWminimize 0.2s ease 0s 1 forwards';
-                    this.JData.animation['maxrestore'] = 'JSWmaxrestore 0.2s ease 0s 1 forwards';
-                    this.JData.animation['restore'] = 'JSWrestore 0.2s ease 0s 1 forwards';
+                    this.JData.animation['show'] = 'JWFFrameShow 0.5s ease 0s 1 normal';
+                    this.JData.animation['close'] = 'JWFclose 0.2s ease 0s 1 forwards';
+                    this.JData.animation['maximize'] = 'JWFmaximize 0.2s ease 0s 1 forwards';
+                    this.JData.animation['minimize'] = 'JWFminimize 0.2s ease 0s 1 forwards';
+                    this.JData.animation['maxrestore'] = 'JWFmaxrestore 0.2s ease 0s 1 forwards';
+                    this.JData.animation['restore'] = 'JWFrestore 0.2s ease 0s 1 forwards';
                 }
                 if (params.layer) {
                     this.setOrderLayer(params.layer);
@@ -515,11 +514,11 @@ var JSW;
             hNode.addEventListener("mousedown", this.onMouseDown.bind(this));
             hNode.addEventListener('move', this.onMouseMove.bind(this));
             //タイトルバーアイコンの機能設定
-            hNode.addEventListener("JSWclose", this.close.bind(this));
-            hNode.addEventListener("JSWmax", this.setMaximize.bind(this, true));
-            hNode.addEventListener("JSWnormal", this.setMaximize.bind(this, false));
-            hNode.addEventListener("JSWmin", this.setMinimize.bind(this, true));
-            hNode.addEventListener("JSWrestore", this.setMinimize.bind(this, false));
+            hNode.addEventListener("JWFclose", this.close.bind(this));
+            hNode.addEventListener("JWFmax", this.setMaximize.bind(this, true));
+            hNode.addEventListener("JWFnormal", this.setMaximize.bind(this, false));
+            hNode.addEventListener("JWFmin", this.setMinimize.bind(this, true));
+            hNode.addEventListener("JWFrestore", this.setMinimize.bind(this, false));
             //ノードを本文へ追加
             document.body.appendChild(hNode);
             //表示
@@ -532,15 +531,15 @@ var JSW;
         Window.prototype.setOverlap = function (flag) {
             this.hNode.style.position = flag ? 'fixed' : 'absolute';
         };
-        Window.prototype.setJswStyle = function (style) {
-            this.getClient().dataset.jswStyle = style;
+        Window.prototype.setJwfStyle = function (style) {
+            this.getClient().dataset.jwfStyle = style;
         };
-        Window.prototype.getJswStyle = function () {
-            return this.getNode().dataset.jswStyle;
+        Window.prototype.getJwfStyle = function () {
+            return this.getNode().dataset.jwfStyle;
         };
         //フレーム追加処理
         Window.prototype.addFrame = function (titleFlag) {
-            this.hNode.dataset.jswType = 'Frame';
+            this.hNode.dataset.jwfType = 'Frame';
             //タイトルの設定
             this.JData.titleSize = titleFlag ? TITLE_SIZE : 0;
             this.hNode.style.minHeight = this.JData.titleSize + "px";
@@ -558,8 +557,8 @@ var JSW;
             ];
             //フレームクリックイベントの処理
             function onFrame() {
-                if (JSW.WindowManager.frame == null)
-                    JSW.WindowManager.frame = this.dataset.index;
+                if (JWF.WindowManager.frame == null)
+                    JWF.WindowManager.frame = this.dataset.index;
                 //EDGEはここでイベントを止めないとテキスト選択が入る
                 //if (WindowManager.frame < 9)
                 //	if (e.preventDefault) e.preventDefault(); else e.returnValue = false
@@ -569,41 +568,41 @@ var JSW;
                 var frame = document.createElement('div');
                 frame.style.cssText = frameStyles[i][1].replace(/\{0\}/g, FRAME_SIZE.toString()).replace(/\{1\}/g, this.JData.titleSize.toString());
                 frame.dataset.index = i.toString();
-                frame.dataset.jswType = frameStyles[i][0];
+                frame.dataset.jwfType = frameStyles[i][0];
                 this.hNode.appendChild(frame);
                 frame.addEventListener("touchstart", onFrame, { passive: false });
-                frame.addEventListener("touchend", function () { JSW.WindowManager.frame = null; }, { passive: false });
+                frame.addEventListener("touchend", function () { JWF.WindowManager.frame = null; }, { passive: false });
                 frame.addEventListener("mousedown", onFrame, false);
-                frame.addEventListener("mouseup", function () { JSW.WindowManager.frame = null; }, false);
+                frame.addEventListener("mouseup", function () { JWF.WindowManager.frame = null; }, false);
             }
             this.JData.frameSize = 1;
             this.getClient().style.top = this.JData.titleSize + 'px';
             var node = this.hNode;
             //タイトルバーの作成
             var title = node.childNodes[9];
-            var titleText = JSW.WindowManager.createElement("div", { "dataset": { jswType: "text" } });
+            var titleText = JWF.WindowManager.createElement("div", { "dataset": { jwfType: "text" } });
             title.appendChild(titleText);
             //アイコンの作成
             var icons = ["min", "max", "close"];
             for (var index in icons) {
-                var icon = JSW.WindowManager.createElement("div", { style: { "width": this.JData.titleSize + "px", "height": this.JData.titleSize + "px" }, "dataset": { jswType: "icon", jswKind: icons[index] } });
+                var icon = JWF.WindowManager.createElement("div", { style: { "width": this.JData.titleSize + "px", "height": this.JData.titleSize + "px" }, "dataset": { jwfType: "icon", jwfKind: icons[index] } });
                 title.appendChild(icon);
                 icon.addEventListener("click", function () {
-                    JSW.WindowManager.callEvent(node, "JSW" + this.dataset.jswKind);
+                    JWF.WindowManager.callEvent(node, "JWF" + this.dataset.jwfKind);
                 });
             }
         };
         Window.prototype.onMouseDown = function (e) {
-            if (JSW.WindowManager.moveNode == null) {
+            if (JWF.WindowManager.moveNode == null) {
                 this.foreground();
-                JSW.WindowManager.moveNode = this.hNode;
-                var p = JSW.WindowManager.getPos(e);
-                JSW.WindowManager.baseX = p.x;
-                JSW.WindowManager.baseY = p.y;
-                JSW.WindowManager.nodeX = this.getPosX();
-                JSW.WindowManager.nodeY = this.getPosY();
-                JSW.WindowManager.nodeWidth = this.getWidth();
-                JSW.WindowManager.nodeHeight = this.getHeight();
+                JWF.WindowManager.moveNode = this.hNode;
+                var p = JWF.WindowManager.getPos(e);
+                JWF.WindowManager.baseX = p.x;
+                JWF.WindowManager.baseY = p.y;
+                JWF.WindowManager.nodeX = this.getPosX();
+                JWF.WindowManager.nodeY = this.getPosY();
+                JWF.WindowManager.nodeWidth = this.getWidth();
+                JWF.WindowManager.nodeHeight = this.getHeight();
                 e.stopPropagation();
                 return false;
             }
@@ -618,41 +617,41 @@ var JSW;
             var width = this.getWidth();
             var height = this.getHeight();
             //選択されている場所によって挙動を変える
-            var frameIndex = parseInt(JSW.WindowManager.frame);
+            var frameIndex = parseInt(JWF.WindowManager.frame);
             switch (frameIndex) {
                 case 0: //上
                     y = p.nodePoint.y + p.nowPoint.y - p.basePoint.y;
-                    height = JSW.WindowManager.nodeHeight - (p.nowPoint.y - p.basePoint.y);
+                    height = JWF.WindowManager.nodeHeight - (p.nowPoint.y - p.basePoint.y);
                     break;
                 case 1: //右
-                    width = JSW.WindowManager.nodeWidth + (p.nowPoint.x - p.basePoint.x);
+                    width = JWF.WindowManager.nodeWidth + (p.nowPoint.x - p.basePoint.x);
                     break;
                 case 2: //下
-                    height = JSW.WindowManager.nodeHeight + (p.nowPoint.y - p.basePoint.y);
+                    height = JWF.WindowManager.nodeHeight + (p.nowPoint.y - p.basePoint.y);
                     break;
                 case 3: //左
                     x = p.nodePoint.x + p.nowPoint.x - p.basePoint.x;
-                    width = JSW.WindowManager.nodeWidth - (p.nowPoint.x - p.basePoint.x);
+                    width = JWF.WindowManager.nodeWidth - (p.nowPoint.x - p.basePoint.x);
                     break;
                 case 4: //左上
                     x = p.nodePoint.x + p.nowPoint.x - p.basePoint.x;
                     y = p.nodePoint.y + p.nowPoint.y - p.basePoint.y;
-                    width = JSW.WindowManager.nodeWidth - (p.nowPoint.x - p.basePoint.x);
-                    height = JSW.WindowManager.nodeHeight - (p.nowPoint.y - p.basePoint.y);
+                    width = JWF.WindowManager.nodeWidth - (p.nowPoint.x - p.basePoint.x);
+                    height = JWF.WindowManager.nodeHeight - (p.nowPoint.y - p.basePoint.y);
                     break;
                 case 5: //右上
                     y = p.nodePoint.y + p.nowPoint.y - p.basePoint.y;
-                    width = JSW.WindowManager.nodeWidth + (p.nowPoint.x - p.basePoint.x);
-                    height = JSW.WindowManager.nodeHeight - (p.nowPoint.y - p.basePoint.y);
+                    width = JWF.WindowManager.nodeWidth + (p.nowPoint.x - p.basePoint.x);
+                    height = JWF.WindowManager.nodeHeight - (p.nowPoint.y - p.basePoint.y);
                     break;
                 case 6: //左下
                     x = p.nodePoint.x + p.nowPoint.x - p.basePoint.x;
-                    width = JSW.WindowManager.nodeWidth - (p.nowPoint.x - p.basePoint.x);
-                    height = JSW.WindowManager.nodeHeight + (p.nowPoint.y - p.basePoint.y);
+                    width = JWF.WindowManager.nodeWidth - (p.nowPoint.x - p.basePoint.x);
+                    height = JWF.WindowManager.nodeHeight + (p.nowPoint.y - p.basePoint.y);
                     break;
                 case 7: //右下
-                    width = JSW.WindowManager.nodeWidth + (p.nowPoint.x - p.basePoint.x);
-                    height = JSW.WindowManager.nodeHeight + (p.nowPoint.y - p.basePoint.y);
+                    width = JWF.WindowManager.nodeWidth + (p.nowPoint.x - p.basePoint.x);
+                    height = JWF.WindowManager.nodeHeight + (p.nowPoint.y - p.basePoint.y);
                     break;
                 default: //クライアント領域
                     if (!this.JData.moveable)
@@ -979,10 +978,10 @@ var JSW;
             }
             else {
                 var animationEnd_2 = function () {
-                    var nodes = node.querySelectorAll('[data-jsw="Window"]');
+                    var nodes = node.querySelectorAll('[data-jwf="Window"]');
                     var count = nodes.length;
                     for (var i = 0; i < count; i++) {
-                        nodes[i].Jsw.layout();
+                        nodes[i].Jwf.layout();
                     }
                     node.style.display = 'none';
                     node.removeEventListener("animationend", animationEnd_2);
@@ -1031,12 +1030,12 @@ var JSW;
                 return;
             this.JData.layoutFlag = true;
             this.JData.redraw = true;
-            JSW.WindowManager.layout(false);
+            JWF.WindowManager.layout(false);
             this.JData.layoutFlag = false;
         };
         Window.prototype.active = function (flag) {
             if (!this.JData.noActive)
-                this.getNode().dataset.jswActive = (flag || flag == null) ? 'true' : 'false';
+                this.getNode().dataset.jwfActive = (flag || flag == null) ? 'true' : 'false';
         };
         /**
          *親のクライアント領域を返す
@@ -1049,8 +1048,8 @@ var JSW;
             if (node.style.position === 'fixed')
                 return window.innerWidth;
             var parent = node.parentNode;
-            if (parent.Jsw)
-                return parent.Jsw.getWidth();
+            if (parent.Jwf)
+                return parent.Jwf.getWidth();
             return parent.offsetWidth;
         };
         /**
@@ -1064,8 +1063,8 @@ var JSW;
             if (node.style.position === 'fixed')
                 return window.innerHeight;
             var parent = node.parentNode;
-            if (parent.Jsw)
-                return parent.Jsw.getHeight();
+            if (parent.Jwf)
+                return parent.Jwf.getHeight();
             return parent.offsetHeight;
         };
         /**
@@ -1087,8 +1086,8 @@ var JSW;
             var client = this.getClient();
             for (var i = 0; i < client.childNodes.length; i++) {
                 var node = client.childNodes[i];
-                if (node.dataset && node.dataset.jsw === "Window")
-                    flag |= node.Jsw.onMeasure(flag);
+                if (node.dataset && node.dataset.jwf === "Window")
+                    flag |= node.Jwf.onMeasure(flag);
             }
             if (!flag && !this.JData.redraw)
                 return false;
@@ -1116,7 +1115,7 @@ var JSW;
         Window.prototype.onLayout = function (flag) {
             if (flag || this.JData.redraw) {
                 //this.onMeasure(true)			//直下の子リスト
-                if (this.hNode.dataset.jswStat == 'maximize') {
+                if (this.hNode.dataset.jwfStat == 'maximize') {
                     this.setPos(0, 0);
                     this.setSize(this.getParentWidth(), this.getParentHeight());
                 }
@@ -1131,15 +1130,15 @@ var JSW;
             var nodes = [];
             for (var i = 0; i < client.childNodes.length; i++) {
                 var node = client.childNodes[i];
-                if (node.dataset && node.dataset.jsw === "Window")
+                if (node.dataset && node.dataset.jwf === "Window")
                     nodes.push(node);
             }
             var count = nodes.length;
             //配置順序リスト
             nodes.sort(function (anode, bnode) {
                 var priority = { top: 10, bottom: 10, left: 8, right: 8, client: 5 };
-                var a = anode.Jsw.JData;
-                var b = bnode.Jsw.JData;
+                var a = anode.Jwf.JData;
+                var b = bnode.Jwf.JData;
                 return priority[b.style] - priority[a.style];
             });
             var padding = this.JData.padding;
@@ -1151,7 +1150,7 @@ var JSW;
             var y2 = y1 + height - padding.y2;
             for (var i = 0; i < count; i++) {
                 var child = nodes[i];
-                var win = child.Jsw;
+                var win = child.Jwf;
                 if (child.dataset.visible === 'false')
                     continue;
                 var margin = win.JData.margin;
@@ -1159,7 +1158,7 @@ var JSW;
                 var py1 = y1 + margin.y1;
                 var px2 = x2 - margin.x2;
                 var py2 = y2 - margin.y2;
-                switch (child.Jsw.JData.style) {
+                switch (child.Jwf.JData.style) {
                     case "top":
                         win.setPos(px1, py1);
                         win.setWidth(px2 - px1);
@@ -1195,13 +1194,13 @@ var JSW;
             var nodes = [];
             for (var i = 0; i < client.childNodes.length; i++) {
                 var node = client.childNodes[i];
-                if (node.dataset && node.dataset.jsw === "Window")
+                if (node.dataset && node.dataset.jwf === "Window")
                     nodes.push(node);
             }
             //重ね合わせソート
             nodes.sort(function (anode, bnode) {
-                var a = anode.Jsw.JData;
-                var b = bnode.Jsw.JData;
+                var a = anode.Jwf.JData;
+                var b = bnode.Jwf.JData;
                 if (a.orderTop)
                     return 1;
                 if (b.orderTop)
@@ -1239,20 +1238,20 @@ var JSW;
             do {
                 if ((flag || flag == null) && p.dataset) {
                     activeNodes.add(p);
-                    p.dataset.jswActive = 'true';
+                    p.dataset.jwfActive = 'true';
                     p.style.zIndex = '1000';
-                    if (p.Jsw)
-                        p.Jsw.callEvent('active', { active: true });
+                    if (p.Jwf)
+                        p.Jwf.callEvent('active', { active: true });
                 }
                 this.orderSort(p);
             } while (p = p.parentNode);
             if (flag || flag == null) {
-                var activeWindows = document.querySelectorAll('[data-jsw="Window"][data-jsw-active="true"]');
+                var activeWindows = document.querySelectorAll('[data-jwf="Window"][data-jwf-active="true"]');
                 for (var i = 0, l = activeWindows.length; i < l; i++) {
                     var w = activeWindows[i];
                     if (!activeNodes.has(w)) {
-                        w.dataset.jswActive = 'false';
-                        w.Jsw.callEvent('active', { active: false });
+                        w.dataset.jwfActive = 'false';
+                        w.Jwf.callEvent('active', { active: false });
                     }
                 }
             }
@@ -1286,10 +1285,10 @@ var JSW;
         Window.prototype.close = function () {
             var that = this;
             function animationEnd() {
-                var nodes = this.querySelectorAll('[data-jsw="Window"]');
+                var nodes = this.querySelectorAll('[data-jwf="Window"]');
                 var count = nodes.length;
                 for (var i = 0; i < count; i++) {
-                    nodes[i].Jsw.layout();
+                    nodes[i].Jwf.layout();
                 }
                 if (this.parentNode)
                     this.parentNode.removeChild(this);
@@ -1452,8 +1451,8 @@ var JSW;
             var childList = client.childNodes;
             for (var i = childList.length - 1; i >= 0; i--) {
                 var child = childList[i];
-                if (child.dataset.jsw === "Window") {
-                    child.Jsw.JData.parent = null;
+                if (child.dataset.jwf === "Window") {
+                    child.Jwf.JData.parent = null;
                     client.removeChild(child);
                 }
             }
@@ -1527,12 +1526,12 @@ var JSW;
                 this.style.minHeight = that.JData.titleSize + "px";
                 this.removeEventListener("animationend", animationEnd);
             }
-            if (this.hNode.dataset.jswStat != 'maximize') {
+            if (this.hNode.dataset.jwfStat != 'maximize') {
                 this.JData.normalX = this.JData.x;
                 this.JData.normalY = this.JData.y;
                 this.JData.normalWidth = this.JData.width;
                 this.JData.normalHeight = this.JData.height;
-                this.hNode.dataset.jswStat = 'maximize';
+                this.hNode.dataset.jwfStat = 'maximize';
                 this.hNode.style.minWidth = this.JData.width + "px";
                 this.hNode.style.minHeight = this.JData.height + "px";
                 var animation = this.JData.animationEnable ? this.JData.animation['maximize'] : '';
@@ -1547,19 +1546,19 @@ var JSW;
                 this.JData.y = this.JData.normalY;
                 this.JData.width = this.JData.normalWidth;
                 this.JData.height = this.JData.normalHeight;
-                this.hNode.dataset.jswStat = 'normal';
+                this.hNode.dataset.jwfStat = 'normal';
                 var animation = this.JData.animationEnable ? this.JData.animation['maxrestore'] : '';
                 this.hNode.style.animation = animation;
             }
             if (flag) {
-                var icon = this.hNode.querySelector("*>[data-jsw-type=title]>[data-jsw-type=icon][data-jsw-kind=max]");
+                var icon = this.hNode.querySelector("*>[data-jwf-type=title]>[data-jwf-type=icon][data-jwf-kind=max]");
                 if (icon)
-                    icon.dataset.jswKind = "normal";
+                    icon.dataset.jwfKind = "normal";
             }
             else {
-                var icon = this.hNode.querySelector("*>[data-jsw-type=title]>[data-jsw-type=icon][data-jsw-kind=normal]");
+                var icon = this.hNode.querySelector("*>[data-jwf-type=title]>[data-jwf-type=icon][data-jwf-kind=normal]");
                 if (icon)
-                    icon.dataset.jswKind = "max";
+                    icon.dataset.jwfKind = "max";
             }
             this.layout();
         };
@@ -1572,32 +1571,32 @@ var JSW;
         Window.prototype.setMinimize = function (flag) {
             var that = this;
             this.hNode.addEventListener("animationend", function () { that.layout(); });
-            if (this.hNode.dataset.jswStat != 'minimize') {
-                //client.style.animation="Jswminimize 0.2s ease 0s 1 forwards"
+            if (this.hNode.dataset.jwfStat != 'minimize') {
+                //client.style.animation="Jwfminimize 0.2s ease 0s 1 forwards"
                 var animation = this.JData.animationEnable ? this.JData.animation['minimize'] : '';
                 this.hNode.style.animation = animation;
-                this.hNode.dataset.jswStat = 'minimize';
+                this.hNode.dataset.jwfStat = 'minimize';
             }
             else {
-                //client.style.animation="Jswrestore 0.2s ease 0s 1 backwards"
+                //client.style.animation="Jwfrestore 0.2s ease 0s 1 backwards"
                 var animation = this.JData.animationEnable ? this.JData.animation['restore'] : '';
                 this.hNode.style.animation = animation;
-                this.hNode.dataset.jswStat = 'normal';
+                this.hNode.dataset.jwfStat = 'normal';
             }
             if (flag) {
-                var icon = this.hNode.querySelector("*>[data-jsw-type=title]>[data-jsw-type=icon][data-jsw-kind=min]");
-                icon.dataset.jswKind = "restore";
+                var icon = this.hNode.querySelector("*>[data-jwf-type=title]>[data-jwf-type=icon][data-jwf-kind=min]");
+                icon.dataset.jwfKind = "restore";
             }
             else {
-                var icon = this.hNode.querySelector("*>[data-jsw-type=title]>[data-jsw-type=icon][data-jsw-kind=restore]");
-                icon.dataset.jswKind = "min";
+                var icon = this.hNode.querySelector("*>[data-jwf-type=title]>[data-jwf-type=icon][data-jwf-kind=restore]");
+                icon.dataset.jwfKind = "min";
             }
             this.JData.minimize = flag;
             this.layout();
         };
         return Window;
     }());
-    JSW.Window = Window;
+    JWF.Window = Window;
     /**
      *フレームウインドウクラス
      *
@@ -1618,11 +1617,11 @@ var JSW;
         }
         return FrameWindow;
     }(Window));
-    JSW.FrameWindow = FrameWindow;
-})(JSW || (JSW = {}));
+    JWF.FrameWindow = FrameWindow;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     /**
      *ボタン用クラス
      *
@@ -1640,7 +1639,7 @@ var JSW;
         function Button(text, value) {
             var _this = _super.call(this) || this;
             _this.setAutoSize(true);
-            _this.setJswStyle('Button');
+            _this.setJwfStyle('Button');
             _this.nodeValue = value;
             //this.setAlign('center')
             var button = document.createElement('div');
@@ -1704,8 +1703,8 @@ var JSW;
             _super.prototype.addEventListener.call(this, type, listener);
         };
         return Button;
-    }(JSW.Window));
-    JSW.Button = Button;
+    }(JWF.Window));
+    JWF.Button = Button;
     var ImageButton = /** @class */ (function (_super) {
         __extends(ImageButton, _super);
         /**
@@ -1717,7 +1716,7 @@ var JSW;
             var _this = _super.call(this) || this;
             _this.setWidth(64);
             //this.setAutoSize(true)
-            _this.setJswStyle('Button');
+            _this.setJwfStyle('Button');
             //this.setAlign('center')
             var button = document.createElement('div');
             _this.getClient().appendChild(button);
@@ -1781,17 +1780,126 @@ var JSW;
             _super.prototype.addEventListener.call(this, type, listener);
         };
         return ImageButton;
-    }(JSW.Window));
-    JSW.ImageButton = ImageButton;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.ImageButton = ImageButton;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
+    var CalendarView = /** @class */ (function (_super) {
+        __extends(CalendarView, _super);
+        function CalendarView() {
+            var _this = _super.call(this) || this;
+            _this.calendarDate = new Date();
+            _this.holidays = {};
+            _this.selects = {};
+            _this.setJwfStyle('CalendarView');
+            var weekString = "日月火水木金土";
+            var client = _this.getClient();
+            var table = document.createElement("table");
+            client.appendChild(table);
+            //月表示
+            var titleLine = table.insertRow(-1);
+            var prev = titleLine.insertCell(-1);
+            prev.innerText = "←";
+            prev.addEventListener("click", function () {
+                _this.moveMonth(-1);
+            });
+            var titleCell = titleLine.insertCell(-1);
+            _this.titleCell = titleCell;
+            titleCell.colSpan = 5;
+            var next = titleLine.insertCell(-1);
+            next.innerText = "→";
+            next.addEventListener("click", function () {
+                _this.moveMonth(1);
+            });
+            _this.dateCells = [];
+            var that = _this;
+            for (var j = 0; j < 7; j++) {
+                var line = table.insertRow(-1);
+                for (var i = 0; i < 7; i++) {
+                    var cell = line.insertCell(-1);
+                    if (j == 0)
+                        cell.innerHTML = weekString.substr(i, 1);
+                    else {
+                        cell.addEventListener('click', function () {
+                            that.onCellClick(this);
+                        });
+                        _this.dateCells.push(cell);
+                        var day = document.createElement("div");
+                        cell.appendChild(day);
+                        var dayText = document.createElement("div");
+                        cell.appendChild(dayText);
+                        var select = document.createElement("div");
+                        cell.appendChild(select);
+                    }
+                }
+            }
+            _this.redraw();
+            return _this;
+        }
+        CalendarView.prototype.moveMonth = function (month) {
+            var date = this.calendarDate;
+            this.calendarDate = new Date(date.getFullYear(), date.getMonth() + month);
+            this.redraw();
+        };
+        CalendarView.prototype.redraw = function () {
+            var calendarDate = this.calendarDate;
+            var date = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+            this.titleCell.innerText = JWF.sprintf("%d年%d月", date.getFullYear(), date.getMonth() + 1);
+            date.setDate(date.getDate() - date.getDay());
+            var dateStart = new Date(date.getTime());
+            this.startDate = dateStart;
+            this.endDate = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate() + 42);
+            var dateCells = this.dateCells;
+            for (var i = 0; i < 42; i++) {
+                var cell = dateCells[i];
+                var day = cell.childNodes[0];
+                var text = cell.childNodes[1];
+                day.innerText = date.getDate().toString();
+                cell.date = new Date(date);
+                date.setDate(date.getDate() + 1);
+                cell.dataset.select = this.selects[date.toDateString()] ? 'true' : '';
+                var holiday = this.holidays[date.toDateString()];
+                if (holiday) {
+                    text.style.visibility = 'visible';
+                    text.innerText = holiday;
+                }
+                else {
+                    text.style.visibility = 'hidden';
+                    text.innerText = '';
+                }
+            }
+            //getHoliday(dateStart);
+        };
+        CalendarView.prototype.setHoliday = function (date, text) {
+            this.holidays[date.toDateString()] = text;
+        };
+        CalendarView.prototype.setSelect = function (date, value) {
+            if (value === void 0) { value = true; }
+            if (value)
+                this.selects[date.toDateString()] = true;
+            else
+                delete this.selects;
+        };
+        CalendarView.prototype.onCellClick = function (cell) {
+            console.log(cell.date.toDateString());
+        };
+        CalendarView.prototype.addEventListener = function (type, listener) {
+            _super.prototype.addEventListener.call(this, type, listener);
+        };
+        return CalendarView;
+    }(JWF.Window));
+    JWF.CalendarView = CalendarView;
+})(JWF || (JWF = {}));
+/// <reference path="./Window.ts" />
+var JWF;
+(function (JWF) {
     var CheckBox = /** @class */ (function (_super) {
         __extends(CheckBox, _super);
         function CheckBox(params) {
             var _this = _super.call(this) || this;
-            _this.setJswStyle('CheckBox');
+            _this.setJwfStyle('CheckBox');
             _this.setAutoSize(true);
             var node = _this.getClient();
             var textArea = document.createElement('label');
@@ -1827,12 +1935,12 @@ var JSW;
             return this.nodeText;
         };
         return CheckBox;
-    }(JSW.Window));
-    JSW.CheckBox = CheckBox;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.CheckBox = CheckBox;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     var DrawerView = /** @class */ (function (_super) {
         __extends(DrawerView, _super);
         function DrawerView() {
@@ -1880,17 +1988,17 @@ var JSW;
             _super.prototype.onLayout.call(this, flag);
         };
         return DrawerView;
-    }(JSW.Window));
-    JSW.DrawerView = DrawerView;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.DrawerView = DrawerView;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     var Label = /** @class */ (function (_super) {
         __extends(Label, _super);
         function Label(text) {
             var _this = _super.call(this) || this;
-            _this.setJswStyle('Label');
+            _this.setJwfStyle('Label');
             var node = _this.getClient();
             var nodeText = document.createElement('span');
             node.appendChild(nodeText);
@@ -1921,11 +2029,11 @@ var JSW;
             node.style.justifyContent = style;
         };
         return Label;
-    }(JSW.Window));
-    JSW.Label = Label;
-})(JSW || (JSW = {}));
-var JSW;
-(function (JSW) {
+    }(JWF.Window));
+    JWF.Label = Label;
+})(JWF || (JWF = {}));
+var JWF;
+(function (JWF) {
     function Sleep(timeout) {
         return new Promise(function (resolv) {
             setTimeout(function () {
@@ -1933,11 +2041,11 @@ var JSW;
             }, timeout);
         });
     }
-    JSW.Sleep = Sleep;
-})(JSW || (JSW = {}));
+    JWF.Sleep = Sleep;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     /**
      *ListView用クラス
     *
@@ -1963,7 +2071,7 @@ var JSW;
             _this.areaWidth = 0;
             var that = _this;
             var client = _this.getClient();
-            client.dataset.jswStyle = 'ListView';
+            client.dataset.jwfStyle = 'ListView';
             var headerBack = document.createElement('div');
             _this.headerBack = headerBack;
             headerBack.dataset.kind = 'ListHeaderBack';
@@ -2096,7 +2204,7 @@ var JSW;
                 var resize = document.createElement('div');
                 resize.index = index;
                 resizers.appendChild(resize);
-                JSW.WindowManager.enableMove(resize);
+                JWF.WindowManager.enableMove(resize);
                 resize.addEventListener("move", function (e) {
                     var p = e.params;
                     var x = p.nodePoint.x + p.nowPoint.x - p.basePoint.x;
@@ -2595,12 +2703,12 @@ var JSW;
             _super.prototype.addEventListener.call(this, type, listener);
         };
         return ListView;
-    }(JSW.Window));
-    JSW.ListView = ListView;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.ListView = ListView;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     var MessageBox = /** @class */ (function (_super) {
         __extends(MessageBox, _super);
         function MessageBox(title, msg, buttons) {
@@ -2610,7 +2718,7 @@ var JSW;
             _this.setTitle(title);
             _this.active();
             _this.setPadding(10, 10, 10, 10);
-            var label = new JSW.Label(msg);
+            var label = new JWF.Label(msg);
             _this.label = label;
             _this.addChild(label, 'top');
             label.setAlign('center');
@@ -2620,7 +2728,7 @@ var JSW;
                 buttons = { 'OK': true };
             }
             for (var name_1 in buttons) {
-                var b = new JSW.Button(name_1, buttons[name_1]);
+                var b = new JWF.Button(name_1, buttons[name_1]);
                 b.setAlign('center');
                 _this.addChild(b, 'top');
                 b.addEventListener('buttonClick', function () {
@@ -2637,12 +2745,12 @@ var JSW;
             this.label.setText(text);
         };
         return MessageBox;
-    }(JSW.FrameWindow));
-    JSW.MessageBox = MessageBox;
-})(JSW || (JSW = {}));
+    }(JWF.FrameWindow));
+    JWF.MessageBox = MessageBox;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     /**
      *パネル用クラス
      *
@@ -2654,21 +2762,21 @@ var JSW;
         __extends(Panel, _super);
         function Panel() {
             var _this = _super.call(this) || this;
-            _this.setJswStyle('Panel');
+            _this.setJwfStyle('Panel');
             _this.setHeight(32);
             return _this;
         }
         return Panel;
-    }(JSW.Window));
-    JSW.Panel = Panel;
-})(JSW || (JSW = {}));
-var JSW;
-(function (JSW) {
+    }(JWF.Window));
+    JWF.Panel = Panel;
+})(JWF || (JWF = {}));
+var JWF;
+(function (JWF) {
     var SelectBox = /** @class */ (function (_super) {
         __extends(SelectBox, _super);
         function SelectBox(option) {
             var _this = _super.call(this) || this;
-            _this.setJswStyle('SelectBox');
+            _this.setJwfStyle('SelectBox');
             _this.setAutoSize(true);
             var node = _this.getClient();
             var select = document.createElement('select');
@@ -2685,12 +2793,12 @@ var JSW;
             return _this;
         }
         return SelectBox;
-    }(JSW.Window));
-    JSW.SelectBox = SelectBox;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.SelectBox = SelectBox;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     /**
      *分割ウインドウ用クラス
      *
@@ -2719,7 +2827,7 @@ var JSW;
                 childList: null,
                 drawerWidth: 0
             };
-            _this.setJswStyle('SplitterView');
+            _this.setJwfStyle('SplitterView');
             _this.setSize(640, 480);
             if (splitPos != null)
                 _this.JDataSplit.splitterPos = splitPos;
@@ -2728,7 +2836,7 @@ var JSW;
             }
             var client = _this.getClient();
             client.dataset.splitterType = _this.JDataSplit.splitterType;
-            _this.JDataSplit.childList = [new JSW.Window(), new JSW.Window()];
+            _this.JDataSplit.childList = [new JWF.Window(), new JWF.Window()];
             _super.prototype.addChild.call(_this, _this.JDataSplit.childList[0]);
             _super.prototype.addChild.call(_this, _this.JDataSplit.childList[1]);
             var icon = document.createElement('div');
@@ -2747,9 +2855,9 @@ var JSW;
                 child0.active(true);
                 icon.style.display = 'none';
             });
-            var splitter = new JSW.Window();
+            var splitter = new JWF.Window();
             _this.JDataSplit.splitter = splitter;
-            splitter.setJswStyle('Splitter');
+            splitter.setJwfStyle('Splitter');
             splitter.setOrderTop(true);
             splitter.setNoActive(true);
             _super.prototype.addChild.call(_this, splitter);
@@ -2956,16 +3064,16 @@ var JSW;
             return this.JDataSplit.childList[index];
         };
         return Splitter;
-    }(JSW.Window));
-    JSW.Splitter = Splitter;
-})(JSW || (JSW = {}));
-var JSW;
-(function (JSW) {
+    }(JWF.Window));
+    JWF.Splitter = Splitter;
+})(JWF || (JWF = {}));
+var JWF;
+(function (JWF) {
     var TableFormView = /** @class */ (function (_super) {
         __extends(TableFormView, _super);
         function TableFormView(params) {
             var _this = _super.call(this, params) || this;
-            _this.setJswStyle('TableFormView');
+            _this.setJwfStyle('TableFormView');
             var table = document.createElement('div');
             _this.table = table;
             _this.getClient().appendChild(table);
@@ -2981,7 +3089,6 @@ var JSW;
             if (params.type === 'submit') {
                 var button = document.createElement('button');
                 button.textContent = params.label;
-                button.name = params.name;
                 this.footer.appendChild(button);
                 if (params.events) {
                     var events = params.events;
@@ -2999,13 +3106,6 @@ var JSW;
                 var data = document.createElement('div');
                 row.appendChild(data);
                 switch (params.type) {
-                    case 'textbox':
-                        var textbox = document.createElement('input');
-                        textbox.type = 'text';
-                        textbox.name = params.name || '';
-                        textbox.value = params.value || '';
-                        data.appendChild(textbox);
-                        break;
                     case 'checkbox':
                         var checkbox = document.createElement('input');
                         checkbox.type = 'checkbox';
@@ -3020,7 +3120,7 @@ var JSW;
                             var o = _a[_i];
                             var option = document.createElement('option');
                             option.textContent = o.name;
-                            option.value = o.value;
+                            option.value = o.value.toString();
                             select.appendChild(option);
                         }
                         data.appendChild(select);
@@ -3051,10 +3151,6 @@ var JSW;
                 this.items.appendChild(row);
                 return row;
             }
-        };
-        TableFormView.prototype.getItem = function (name) {
-            var node = this.getClient().querySelector("[name=\"" + name + "\"]");
-            return node;
         };
         TableFormView.prototype.getParams = function () {
             var values = {};
@@ -3094,17 +3190,17 @@ var JSW;
             }
         };
         return TableFormView;
-    }(JSW.Window));
-    JSW.TableFormView = TableFormView;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.TableFormView = TableFormView;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     var TextBox = /** @class */ (function (_super) {
         __extends(TextBox, _super);
         function TextBox(params) {
             var _this = _super.call(this) || this;
-            _this.setJswStyle('TextBox');
+            _this.setJwfStyle('TextBox');
             _this.setAutoSize(true);
             var node = _this.getClient();
             var img = document.createElement('img');
@@ -3144,13 +3240,13 @@ var JSW;
             return this.nodeText;
         };
         return TextBox;
-    }(JSW.Window));
-    JSW.TextBox = TextBox;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.TextBox = TextBox;
+})(JWF || (JWF = {}));
 /// <reference path="./Window.ts" />
 //
-var JSW;
-(function (JSW) {
+var JWF;
+(function (JWF) {
     /**
      *
      *
@@ -3450,7 +3546,7 @@ var JSW;
          */
         TreeItem.prototype.getTreeView = function () {
             var node = this.hNode;
-            while (node && node.dataset.jswStyle !== 'TreeView')
+            while (node && node.dataset.jwfStyle !== 'TreeView')
                 node = node.parentElement;
             if (node)
                 return node.treeView;
@@ -3458,7 +3554,7 @@ var JSW;
         };
         return TreeItem;
     }());
-    JSW.TreeItem = TreeItem;
+    JWF.TreeItem = TreeItem;
     /**
      *TreeView用クラス
      *
@@ -3475,7 +3571,7 @@ var JSW;
         function TreeView(params) {
             var _this = _super.call(this, params) || this;
             var client = _this.getClient();
-            client.dataset.jswStyle = 'TreeView';
+            client.dataset.jwfStyle = 'TreeView';
             client.treeView = _this;
             var item = new TreeItem('root', true);
             _this.mRootItem = item;
@@ -3607,9 +3703,9 @@ var JSW;
             _super.prototype.addEventListener.call(this, type, listener);
         };
         return TreeView;
-    }(JSW.Window));
-    JSW.TreeView = TreeView;
-})(JSW || (JSW = {}));
+    }(JWF.Window));
+    JWF.TreeView = TreeView;
+})(JWF || (JWF = {}));
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
@@ -3617,7 +3713,6 @@ var JSW;
  *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
  * @version   v4.2.6+9869a4bc
  */
-var define;
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
@@ -3774,27 +3869,27 @@ var define;
     /**
       `Promise.resolve` returns a promise that will become resolved with the
       passed `value`. It is shorthand for the following:
-    
+
       ```javascript
       let promise = new Promise(function(resolve, reject){
         resolve(1);
       });
-    
+
       promise.then(function(value){
         // value === 1
       });
       ```
-    
+
       Instead of writing the above, your code now simply becomes the following:
-    
+
       ```javascript
       let promise = Promise.resolve(1);
-    
+
       promise.then(function(value){
         // value === 1
       });
       ```
-    
+
       @method resolve
       @static
       @param {Any} value value that the returned promise will be resolved with
@@ -4127,39 +4222,39 @@ var define;
       is fulfilled with an array of fulfillment values for the passed promises, or
       rejected with the reason of the first passed promise to be rejected. It casts all
       elements of the passed iterable to promises as it runs this algorithm.
-    
+
       Example:
-    
+
       ```javascript
       let promise1 = resolve(1);
       let promise2 = resolve(2);
       let promise3 = resolve(3);
       let promises = [ promise1, promise2, promise3 ];
-    
+
       Promise.all(promises).then(function(array){
         // The array here would be [ 1, 2, 3 ];
       });
       ```
-    
+
       If any of the `promises` given to `all` are rejected, the first promise
       that is rejected will be given as an argument to the returned promises's
       rejection handler. For example:
-    
+
       Example:
-    
+
       ```javascript
       let promise1 = resolve(1);
       let promise2 = reject(new Error("2"));
       let promise3 = reject(new Error("3"));
       let promises = [ promise1, promise2, promise3 ];
-    
+
       Promise.all(promises).then(function(array){
         // Code here never runs because there are rejected promises!
       }, function(error) {
         // error.message === "2"
       });
       ```
-    
+
       @method all
       @static
       @param {Array} entries array of promises
@@ -4175,47 +4270,47 @@ var define;
     /**
       `Promise.race` returns a new promise which is settled in the same way as the
       first passed promise to settle.
-    
+
       Example:
-    
+
       ```javascript
       let promise1 = new Promise(function(resolve, reject){
         setTimeout(function(){
           resolve('promise 1');
         }, 200);
       });
-    
+
       let promise2 = new Promise(function(resolve, reject){
         setTimeout(function(){
           resolve('promise 2');
         }, 100);
       });
-    
+
       Promise.race([promise1, promise2]).then(function(result){
         // result === 'promise 2' because it was resolved before promise1
         // was resolved.
       });
       ```
-    
+
       `Promise.race` is deterministic in that only the state of the first
       settled promise matters. For example, even if other promises given to the
       `promises` array argument are resolved, but the first settled promise has
       become rejected before the other promises became fulfilled, the returned
       promise will become rejected:
-    
+
       ```javascript
       let promise1 = new Promise(function(resolve, reject){
         setTimeout(function(){
           resolve('promise 1');
         }, 200);
       });
-    
+
       let promise2 = new Promise(function(resolve, reject){
         setTimeout(function(){
           reject(new Error('promise 2'));
         }, 100);
       });
-    
+
       Promise.race([promise1, promise2]).then(function(result){
         // Code here never runs
       }, function(reason){
@@ -4223,13 +4318,13 @@ var define;
         // promise 1 became fulfilled
       });
       ```
-    
+
       An example real-world use case is implementing timeouts:
-    
+
       ```javascript
       Promise.race([ajax('foo.json'), timeout(5000)])
       ```
-    
+
       @method race
       @static
       @param {Array} promises array of promises to observe
@@ -4257,31 +4352,31 @@ var define;
     /**
       `Promise.reject` returns a promise rejected with the passed `reason`.
       It is shorthand for the following:
-    
+
       ```javascript
       let promise = new Promise(function(resolve, reject){
         reject(new Error('WHOOPS'));
       });
-    
+
       promise.then(function(value){
         // Code here doesn't run because the promise is rejected!
       }, function(reason){
         // reason.message === 'WHOOPS'
       });
       ```
-    
+
       Instead of writing the above, your code now simply becomes the following:
-    
+
       ```javascript
       let promise = Promise.reject(new Error('WHOOPS'));
-    
+
       promise.then(function(value){
         // Code here doesn't run because the promise is rejected!
       }, function(reason){
         // reason.message === 'WHOOPS'
       });
       ```
-    
+
       @method reject
       @static
       @param {Any} reason value that the returned promise will be rejected with.
@@ -4306,66 +4401,66 @@ var define;
       primary way of interacting with a promise is through its `then` method, which
       registers callbacks to receive either a promise's eventual value or the reason
       why the promise cannot be fulfilled.
-    
+
       Terminology
       -----------
-    
+
       - `promise` is an object or function with a `then` method whose behavior conforms to this specification.
       - `thenable` is an object or function that defines a `then` method.
       - `value` is any legal JavaScript value (including undefined, a thenable, or a promise).
       - `exception` is a value that is thrown using the throw statement.
       - `reason` is a value that indicates why a promise was rejected.
       - `settled` the final resting state of a promise, fulfilled or rejected.
-    
+
       A promise can be in one of three states: pending, fulfilled, or rejected.
-    
+
       Promises that are fulfilled have a fulfillment value and are in the fulfilled
       state.  Promises that are rejected have a rejection reason and are in the
       rejected state.  A fulfillment value is never a thenable.
-    
+
       Promises can also be said to *resolve* a value.  If this value is also a
       promise, then the original promise's settled state will match the value's
       settled state.  So a promise that *resolves* a promise that rejects will
       itself reject, and a promise that *resolves* a promise that fulfills will
       itself fulfill.
-    
-    
+
+
       Basic Usage:
       ------------
-    
+
       ```js
       let promise = new Promise(function(resolve, reject) {
         // on success
         resolve(value);
-    
+
         // on failure
         reject(reason);
       });
-    
+
       promise.then(function(value) {
         // on fulfillment
       }, function(reason) {
         // on rejection
       });
       ```
-    
+
       Advanced Usage:
       ---------------
-    
+
       Promises shine when abstracting away asynchronous interactions such as
       `XMLHttpRequest`s.
-    
+
       ```js
       function getJSON(url) {
         return new Promise(function(resolve, reject){
           let xhr = new XMLHttpRequest();
-    
+
           xhr.open('GET', url);
           xhr.onreadystatechange = handler;
           xhr.responseType = 'json';
           xhr.setRequestHeader('Accept', 'application/json');
           xhr.send();
-    
+
           function handler() {
             if (this.readyState === this.DONE) {
               if (this.status === 200) {
@@ -4377,16 +4472,16 @@ var define;
           };
         });
       }
-    
+
       getJSON('/posts.json').then(function(json) {
         // on fulfillment
       }, function(reason) {
         // on rejection
       });
       ```
-    
+
       Unlike callbacks, promises are great composable primitives.
-    
+
       ```js
       Promise.all([
         getJSON('/posts'),
@@ -4394,11 +4489,11 @@ var define;
       ]).then(function(values){
         values[0] // => postsJSON
         values[1] // => commentsJSON
-    
+
         return values;
       });
       ```
-    
+
       @class Promise
       @param {Function} resolver
       Useful for tooling.
@@ -4603,9 +4698,9 @@ var define;
         /**
           `finally` will be invoked regardless of the promise's fate just as native
           try/catch/finally behaves
-      
+
           Synchronous example:
-      
+
           ```js
           findAuthor() {
             if (Math.random() > 0.5) {
@@ -4613,7 +4708,7 @@ var define;
             }
             return new Author();
           }
-      
+
           try {
             return findAuthor(); // succeed or fail
           } catch(error) {
@@ -4623,9 +4718,9 @@ var define;
             // doesn't affect the return value
           }
           ```
-      
+
           Asynchronous example:
-      
+
           ```js
           findAuthor().catch(function(reason){
             return findOtherAuther();
@@ -4633,7 +4728,7 @@ var define;
             // author was either found, or not
           });
           ```
-      
+
           @method finally
           @param {Function} callback
           @return {Promise}
@@ -4703,4 +4798,4 @@ var define;
     return Promise$2;
 })));
 //# sourceMappingURL=es6-promise.auto.map
-//# sourceMappingURL=jsw.js.map
+//# sourceMappingURL=jwf.js.map

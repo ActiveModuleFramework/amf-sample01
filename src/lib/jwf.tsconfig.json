@@ -5,7 +5,7 @@
 		"module": "amd",
 		"composite": true,
 		"declaration": true,
-		"outFile": "../dist/js/jwf.js",
+		"outFile": "../../dist/public/js/jwf.js",
 		"rootDir": "./src",
 		"moduleResolution": "node",
 		"lib": [
