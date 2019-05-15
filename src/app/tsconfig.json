@@ -7,6 +7,6 @@
 		"sourceMap": true,
 	},
 	"references": [{
-		"path": "../../local_modules/active-module-framework"
+		"path": "../../local_modules/active-module-framework/src"
 	}]
 }
